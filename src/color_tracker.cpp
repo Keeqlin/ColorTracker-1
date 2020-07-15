@@ -287,7 +287,7 @@ vector<Mat> ColorTracker::get_feature_map(Mat &im_patch, vector<string> &feature
 		// Grayscale values (image intensity)
 		if (used_features[0])
 		{
-			cv::cvtColor(im_patch, out[0], CV_BGR2GRAY);
+			cv::cvtColor(im_patch, out[0], COLOR_BGR2GRAY);
 			out[0].convertTo(out[0], CV_64F);
 			out[0] = (out[0] / 255) - 0.5;
 		}
@@ -605,7 +605,7 @@ cv::Rect ColorTracker::track_frame(Mat &current_frame)
 			data_matrix = Mat::zeros(z_pca.rows, z_pca.cols, CV_64FC1);
 		}
 		// compute the mean appearance
-		reduce(z_pca, data_mean, 0, CV_REDUCE_AVG);
+		reduce(z_pca, data_mean, 0, REDUCE_AVG);
 
 		// substract the mean from the appearance to get the data matrix
 		double*data = ((double*)data_matrix.data);
@@ -720,8 +720,8 @@ void ColorTracker::track_video(double start_second,double end_second)
 	VideoCapture vcap;
 	if (vcap.open(params.video_path))
 	{
-		int numberOfFrames = vcap.get(CV_CAP_PROP_FRAME_COUNT); // get frame count
-		double framerate = vcap.get(CV_CAP_PROP_FPS); //get the frame rate
+		int numberOfFrames = vcap.get(CAP_PROP_FRAME_COUNT); // get frame count
+		double framerate = vcap.get(CAP_PROP_FPS); //get the frame rate
 		framerate = 30;		
 		//cout << framerate << endl;		
 		unsigned int start_frame = start_second * framerate;
@@ -735,7 +735,7 @@ void ColorTracker::track_video(double start_second,double end_second)
 		assert(start_frame < end_frame);
 		assert(end_frame < numberOfFrames);
 
-		vcap.set(CV_CAP_PROP_POS_FRAMES, start_frame);
+		vcap.set(CAP_PROP_POS_FRAMES, start_frame);
 		int end = end_frame - start_frame;		
 		while (frame_index <= end && vcap.read(current_frame))
 		{
